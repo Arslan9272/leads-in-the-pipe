@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://leadsinthepipe.com/sitemap.xml
+Sitemap: https://www.leadsinthepipe.com/sitemap.xml
