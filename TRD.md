@@ -17,7 +17,8 @@
 | Language | **TypeScript 5+** | Type safety, maintainability |
 | Styling | **Tailwind CSS 3+** | Utility-first, fast iteration, design tokens via config |
 | Animation | **Framer Motion 11+** | Best-in-class React motion library |
-| Form backend | **Formspree** | No backend needed, free tier |
+| Routing | **react-router-dom 6** | Multi-page site (Home / Services / About / Pricing / Contact) with clean URLs and per-page SEO. v6 chosen over v7 for stable, complete type declarations. SPA deep-links handled via `vercel.json` rewrite. |
+| Form backend | **FastAPI email service** (`backend/`) — Formspree fallback | Forms POST to a tiny FastAPI app that emails submissions via SMTP (no data stored). Falls back to Formspree when `VITE_API_BASE_URL` is unset. See `backend/README.md`. Python deps: `fastapi`, `uvicorn`, `pydantic[email]`. |
 | Icons | **Custom SVG components** (recreated from Figma) + **Lucide React** for utility icons (menu, social) |
 | Fonts | Self-hosted via `@fontsource` or Google Fonts (choices set by Designer agent) |
 | Testing | **Vitest** + **React Testing Library** + **vitest-axe** (component-level + a11y) | Simple, fast, no E2E framework needed for v1.0 |
@@ -362,10 +363,13 @@ jobs:
 
 | Variable | Purpose | Required |
 |---|---|---|
-| `VITE_FORMSPREE_ENDPOINT` | Formspree form endpoint URL | No — form gracefully no-ops if missing (shows "setup pending" toast) |
+| `VITE_API_BASE_URL` | Base URL of the FastAPI email backend. When set, the audit form POSTs to `/api/audit` and the hero form to `/api/lead`. | No — falls back to Formspree, then to a "setup pending" toast |
+| `VITE_FORMSPREE_ENDPOINT` | Formspree form endpoint URL (fallback when `VITE_API_BASE_URL` is unset) | No — form gracefully no-ops if missing (shows "setup pending" toast) |
 | `VITE_CONTACT_EMAIL` | Email used in mailto links | No — defaults to `hello@leadsinthepipe.com` per `docs/decisions.md` #3 |
 
 Stored in `.env.local` (gitignored) and `.env.example` (committed).
+
+**Backend env vars** (`backend/.env`, see `backend/.env.example`): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_USE_TLS`, `MAIL_FROM`, `MAIL_TO`, `ALLOWED_ORIGINS`. With `SMTP_HOST` blank the backend logs submissions instead of sending (dev mode).
 
 ---
 

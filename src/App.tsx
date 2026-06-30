@@ -1,31 +1,27 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+
 import { ToastProvider } from '@/components/ui/Toast';
-import { Header } from '@/components/sections/Header';
-import { Hero } from '@/components/sections/Hero';
-import { Services } from '@/components/sections/Services';
-import { RecipeForSuccess } from '@/components/sections/RecipeForSuccess';
-import { WhatWeDo } from '@/components/sections/WhatWeDo';
-import { Offering } from '@/components/sections/Offering';
-import { Articles } from '@/components/sections/Articles';
-import { LetsTalk } from '@/components/sections/LetsTalk';
-import { Footer } from '@/components/sections/Footer';
+import { RootLayout } from '@/components/layout/RootLayout';
+import { HomePage } from '@/pages/HomePage';
+import { ServicesPage } from '@/pages/ServicesPage';
+import { AboutPage } from '@/pages/AboutPage';
+import { PricingPage } from '@/pages/PricingPage';
+import { ContactPage } from '@/pages/ContactPage';
+import { ROUTES } from '@/lib/constants';
 
 export function App() {
   return (
     <ToastProvider>
-      <a href="#main" className="skip-link">
-        Skip to content
-      </a>
-      <Header />
-      <main id="main">
-        <Hero />
-        <Services />
-        <RecipeForSuccess />
-        <WhatWeDo />
-        <Offering />
-        <Articles />
-        <LetsTalk />
-      </main>
-      <Footer />
+      <Routes>
+        <Route element={<RootLayout />}>
+          <Route path={ROUTES.home} element={<HomePage />} />
+          <Route path={ROUTES.services} element={<ServicesPage />} />
+          <Route path={ROUTES.about} element={<AboutPage />} />
+          <Route path={ROUTES.pricing} element={<PricingPage />} />
+          <Route path={ROUTES.contact} element={<ContactPage />} />
+          <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
+        </Route>
+      </Routes>
     </ToastProvider>
   );
 }

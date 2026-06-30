@@ -1,4 +1,4 @@
-import { SECTION_IDS } from '@/lib/constants';
+import { ROUTES } from '@/lib/constants';
 
 export interface NavLink {
   label: string;
@@ -6,10 +6,13 @@ export interface NavLink {
 }
 
 export const navLinks: NavLink[] = [
-  { label: 'Intro', href: `#${SECTION_IDS.hero}` },
-  { label: 'About', href: `#${SECTION_IDS.whatWeDo}` },
-  { label: 'Pricing', href: `#${SECTION_IDS.offering}` },
-  { label: 'Guide', href: `#${SECTION_IDS.articles}` },
+  { label: 'Home', href: ROUTES.home },
+  { label: 'Services', href: ROUTES.services },
+  { label: 'About', href: ROUTES.about },
+  { label: 'Pricing', href: ROUTES.pricing },
+  { label: 'Contact', href: ROUTES.contact },
 ];
+
+export const NAV_CTA: NavLink = { label: 'Book a free audit', href: ROUTES.contact };
 
 export const footerNavLinks: NavLink[] = navLinks;

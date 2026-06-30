@@ -72,7 +72,7 @@ export function WhatWeDo() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: '-10%' }}
                     transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                    className="lg:h-[380px]"
+                    className="lg:min-h-[380px]"
                   >
                     <CapabilityDiagram name={cap.icon} />
                   </motion.div>

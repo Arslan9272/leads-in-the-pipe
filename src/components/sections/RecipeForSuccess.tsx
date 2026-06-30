@@ -11,8 +11,8 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { id: 'clients', target: 1200, suffix: '+', label: 'Happy clients' },
-  { id: 'projects', target: 300, suffix: '+', label: 'Finished projects' },
+  { id: 'clients', target: 60, suffix: '+', label: 'Happy clients' },
+  { id: 'projects', target: 100, suffix: '+', label: 'Finished projects' },
   { id: 'growth', target: 230, suffix: '%', label: 'Average yearly growth rate' },
 ];
 

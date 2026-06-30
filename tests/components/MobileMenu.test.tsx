@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { createRef } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { MobileMenu } from '@/components/MobileMenu';
 
 function setup(open: boolean) {
@@ -14,7 +15,9 @@ function setup(open: boolean) {
   (triggerRef as { current: HTMLButtonElement | null }).current = triggerHost;
 
   const result = render(
-    <MobileMenu open={open} onClose={onClose} triggerRef={triggerRef} />,
+    <MemoryRouter>
+      <MobileMenu open={open} onClose={onClose} triggerRef={triggerRef} />
+    </MemoryRouter>,
   );
 
   return { ...result, onClose, triggerHost };

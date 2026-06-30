@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
+import { MemoryRouter } from 'react-router-dom';
 
 import { QualityLeads } from '@/components/sections/QualityLeads';
 import { RecipeForSuccess } from '@/components/sections/RecipeForSuccess';
@@ -30,7 +31,11 @@ describe('Section accessibility', () => {
   });
 
   it('LetsTalk has no axe violations', async () => {
-    const { container } = render(<LetsTalk />);
+    const { container } = render(
+      <MemoryRouter>
+        <LetsTalk />
+      </MemoryRouter>,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 });

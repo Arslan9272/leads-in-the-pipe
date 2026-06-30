@@ -13,6 +13,14 @@ const COMMON = {
   strokeLinejoin: 'round' as const,
 };
 
+export function LinkedInIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={cn('h-5 w-5', className)} fill="currentColor">
+      <path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.4 8.4h3.1V21H3.4V8.4Zm5.06 0h2.97v1.72h.04c.41-.78 1.43-1.6 2.94-1.6 3.14 0 3.72 2.07 3.72 4.76V21h-3.1v-5.6c0-1.34-.02-3.06-1.86-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-3.1V8.4Z" />
+    </svg>
+  );
+}
+
 export function InstagramIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={cn('h-5 w-5', className)} {...COMMON}>
@@ -59,6 +67,8 @@ export function SocialIcon({
   className?: string;
 }) {
   switch (platform) {
+    case 'linkedin':
+      return <LinkedInIcon className={className} />;
     case 'instagram':
       return <InstagramIcon className={className} />;
     case 'facebook':

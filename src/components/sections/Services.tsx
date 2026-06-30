@@ -134,8 +134,13 @@ export function Services() {
 function ServiceCard({ service }: { service: (typeof services)[number] }) {
   return (
     <Card interactive className="flex h-full flex-col">
-      <ServiceIcon name={service.icon} className="mb-5 h-10 w-10" />
-      <h3 className="font-display text-lg font-semibold text-text-primary">{service.title}</h3>
+      <ServiceIcon
+        name={service.icon}
+        className="mb-5 h-10 w-10 text-accent transition-colors duration-300 group-hover/card:text-accent"
+      />
+      <h3 className="font-display text-lg font-semibold text-text-primary transition-colors duration-300 group-hover/card:text-accent">
+        {service.title}
+      </h3>
       <p className="mt-2 text-sm leading-relaxed text-text-secondary">{service.description}</p>
     </Card>
   );

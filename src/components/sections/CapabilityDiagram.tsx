@@ -40,7 +40,8 @@ function IcpDiagram() {
 
   return (
     <Frame label="Targeting">
-      <svg viewBox="0 0 240 240" className="h-full w-full" aria-hidden="true">
+      <div className="flex justify-center">
+      <svg viewBox="0 0 240 240" className="h-44 w-44 sm:h-52 sm:w-52" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <defs>
           <radialGradient id="icp-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#9EFB9C" stopOpacity="0.25" />
@@ -93,6 +94,7 @@ function IcpDiagram() {
           />
         ))}
       </svg>
+      </div>
       <StatRow
         items={[
           { value: '4,200', label: 'Accounts mapped' },
@@ -121,7 +123,7 @@ function InfrastructureDiagram() {
         {inboxes.map((inbox, i) => (
           <div
             key={inbox.domain}
-            className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3"
+            className="flex cursor-default items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 transition-colors duration-200 hover:border-accent/40 hover:bg-accent/[0.06]"
           >
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent/15 text-accent">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -173,7 +175,7 @@ function MessagingDiagram() {
 
   return (
     <Frame label="Sequences">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-3">
         {channels.map((channel, ci) => (
           <div key={channel.label} className="space-y-2">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted">
@@ -182,7 +184,7 @@ function MessagingDiagram() {
             {channel.bubbles.map((text, bi) => (
               <motion.div
                 key={bi}
-                className="rounded-lg border border-white/10 bg-white/[0.04] p-2.5 text-[11px] leading-snug text-text-secondary"
+                className="cursor-default rounded-lg border border-white/10 bg-white/[0.04] p-2.5 text-[11px] leading-snug text-text-secondary transition-colors duration-200 hover:border-accent/40 hover:bg-accent/[0.06] hover:text-text-primary"
                 initial={prefersReduced ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -229,7 +231,8 @@ function OutreachDiagram() {
 
   return (
     <Frame label="At scale">
-      <svg viewBox="0 0 240 220" className="h-full w-full" aria-hidden="true">
+      <div className="flex justify-center">
+      <svg viewBox="0 0 240 220" className="h-44 w-auto sm:h-52" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <defs>
           <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#9EFB9C" stopOpacity="0.4" />
@@ -277,9 +280,20 @@ function OutreachDiagram() {
         <circle cx="120" cy="110" r="3" fill="#9EFB9C" />
 
         {nodes.map((n, i) => (
-          <circle key={`node-${i}`} cx={n.x} cy={n.y} r="4" fill="#1A1A1A" stroke="#9EFB9C" strokeWidth="1" strokeOpacity="0.5" />
+          <circle
+            key={`node-${i}`}
+            cx={n.x}
+            cy={n.y}
+            r="4"
+            fill="#1A1A1A"
+            stroke="#9EFB9C"
+            strokeWidth="1"
+            strokeOpacity="0.5"
+            className="cursor-default transition-all duration-200 hover:[fill:#0A0A0A] hover:[r:7] hover:[stroke-width:2]"
+          />
         ))}
       </svg>
+      </div>
       <StatRow
         items={[
           { value: '14k', label: 'Touches / mo' },
@@ -319,7 +333,10 @@ function OptimizationDiagram() {
           {variants.map((v, i) => {
             const isWin = i === winner;
             return (
-              <div key={v.id} className="flex flex-1 flex-col items-center gap-2">
+              <div
+                key={v.id}
+                className="group flex flex-1 cursor-default flex-col items-center gap-2 rounded-lg px-1 py-1 transition-colors duration-200 hover:bg-accent/[0.06]"
+              >
                 <span
                   className={
                     'font-mono text-[10px] transition-colors ' +
@@ -330,8 +347,8 @@ function OptimizationDiagram() {
                 </span>
                 <motion.div
                   className={
-                    'w-full rounded-t-md ' +
-                    (isWin ? 'bg-accent' : 'bg-white/15')
+                    'w-full rounded-t-md transition-colors duration-200 ' +
+                    (isWin ? 'bg-accent' : 'bg-white/15 group-hover:bg-accent/40')
                   }
                   initial={{ height: 0 }}
                   animate={{ height: `${v.value}%` }}
@@ -407,7 +424,7 @@ function MeetingsDiagram() {
               <motion.div
                 key={idx}
                 className={
-                  'h-7 rounded-md border ' +
+                  'h-7 cursor-default rounded-md border transition-colors duration-200 hover:border-accent/60 hover:bg-accent/30 ' +
                   (isBooked
                     ? 'border-accent/40 bg-accent/20'
                     : 'border-white/10 bg-white/[0.02]')
@@ -445,10 +462,7 @@ function Frame({ label, children }: { label: string; children: React.ReactNode }
         aria-hidden="true"
         className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-accent/15 blur-3xl"
       />
-      <div className="relative flex items-center justify-between">
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-text-muted">
-          Diagram
-        </span>
+      <div className="relative flex items-center justify-end">
         <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent">
           {label}
         </span>

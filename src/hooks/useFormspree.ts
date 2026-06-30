@@ -29,7 +29,9 @@ export function useFormspree(): UseFormspreeResult {
 
   const submit = useCallback(async () => {
     if (!isValid) return;
-    const endpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT;
+    const apiBase = import.meta.env.VITE_API_BASE_URL;
+    const formspree = import.meta.env.VITE_FORMSPREE_ENDPOINT;
+    const endpoint = apiBase ? `${apiBase.replace(/\/$/, '')}/api/lead` : formspree;
     if (!endpoint) {
       setStatus('pending-setup');
       return;

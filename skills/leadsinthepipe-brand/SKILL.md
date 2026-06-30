@@ -43,6 +43,16 @@ These mirror `tailwind.config.ts` — keep both in sync.
 | `bg.elevated` | `#1A1A1A` | Card hover |
 | `accent.DEFAULT` | `#9EFB9C` | Mint — primary accent |
 | `accent.dim` | `#7DD97B` | Hover for mint accents |
+| `surface.slab` | `#0A0F0D` | Deep green-tinted charcoal slab for the tool-stack / revenue-systems sections |
+| `surface.slabCard` | `#10160F` | Inner card/chip surface on the slab |
+
+### Single-accent system (v1.2 — mint only)
+
+The site uses **mint `#9EFB9C` as the sole accent** across the whole application — logo, CTAs, hover/focus states, eyebrows, active states, links. (The orange "heat" accent trialled in v1.1 was removed; mint covers everything.)
+
+- **Interactive hover:** cards/CTAs brighten to mint and lift — border → `accent`, icon/label → `accent`, soft mint `boxShadow.glow` + slight scale; color-only under reduced motion.
+- **Errors** stay coral (`tier.bespoke`), never mint.
+- **Slab sections** (tool-stack diamond, "revenue systems"): instead of a white/paper panel, use the dark `surface.slab` `#0A0F0D` — a small tonal step off pure black so the band reads as distinct while staying cohesive with black+mint. Text on slab: heading `#F2F5F0`, body `#C2CBC1`, muted `#8A938A`; mint accents reserved for active/emphasis; hairline border `accent/10`. Full rationale: `docs/redesign-design-spec.md`.
 | `tier.basic` | `#9EFB9C` | Basic pricing tier heading |
 | `tier.standard` | `#4FB6E8` | Standard pricing tier heading |
 | `tier.bespoke` | `#FF6B5C` | Bespoke pricing tier heading |

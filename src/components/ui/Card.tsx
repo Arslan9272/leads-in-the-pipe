@@ -13,7 +13,7 @@ export function Card({ children, interactive = false, className, ...rest }: Card
       className={cn(
         'rounded-2xl border border-border bg-bg-card p-6 md:p-8',
         interactive &&
-          'transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:bg-bg-elevated',
+          'group/card transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] hover:border-accent-dim hover:bg-bg-elevated hover:shadow-glow focus-within:border-accent-dim focus-within:shadow-glow motion-reduce:hover:scale-100 motion-reduce:hover:shadow-none',
         className,
       )}
       {...rest}

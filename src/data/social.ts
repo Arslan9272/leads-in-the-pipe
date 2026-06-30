@@ -1,4 +1,6 @@
-export type SocialPlatform = 'instagram' | 'facebook' | 'pinterest' | 'twitter';
+import { CONTACT_LINKEDIN } from '@/lib/constants';
+
+export type SocialPlatform = 'linkedin' | 'instagram' | 'facebook' | 'pinterest' | 'twitter';
 
 export interface SocialLink {
   platform: SocialPlatform;
@@ -7,8 +9,5 @@ export interface SocialLink {
 }
 
 export const socialLinks: SocialLink[] = [
-  { platform: 'instagram', label: 'Instagram', href: '#' },
-  { platform: 'facebook', label: 'Facebook', href: '#' },
-  { platform: 'pinterest', label: 'Pinterest', href: '#' },
-  { platform: 'twitter', label: 'Twitter', href: '#' },
+  { platform: 'linkedin', label: 'LinkedIn', href: CONTACT_LINKEDIN },
 ];

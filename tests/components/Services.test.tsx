@@ -15,7 +15,11 @@ describe('Services', () => {
   it('renders all 6 service cards from the data module', () => {
     render(<Services />);
     for (const service of services) {
-      expect(screen.getByRole('heading', { level: 3, name: service.title })).toBeInTheDocument();
+      // Each card renders in both the mobile and desktop (L-shape) layouts,
+      // so the heading appears more than once in the DOM.
+      expect(
+        screen.getAllByRole('heading', { level: 3, name: service.title }).length,
+      ).toBeGreaterThan(0);
     }
     expect(services).toHaveLength(6);
   });

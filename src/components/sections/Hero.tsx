@@ -3,14 +3,14 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { PipeBubble } from '@/components/icons/PipeBubble';
+import { PipeFlow } from '@/components/icons/PipeFlow';
 import { useFormspree } from '@/hooks/useFormspree';
 import { useToast } from '@/hooks/useToast';
 import { useEffect } from 'react';
 
 export function Hero() {
   const prefersReduced = useReducedMotion();
-  const { email, setEmail, isValid, isSubmitting, status, submit } = useFormspree();
+  const { email, setEmail, isSubmitting, status, submit } = useFormspree();
   const { show } = useToast();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export function Hero() {
     } else if (status === 'error') {
       show('error', 'Something went wrong. Please try again.');
     } else if (status === 'pending-setup') {
-      show('info', 'Form setup pending. Reach us at hello@leadsinthepipe.com.');
+      show('info', 'Form setup pending. Reach us at umair@leadsinthepipe.com.');
     }
   }, [status, show]);
 
@@ -32,8 +32,8 @@ export function Hero() {
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div
-            initial={prefersReduced ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={prefersReduced ? false : { opacity: 0, x: -48 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-bg-card/60 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-text-secondary">
@@ -72,7 +72,7 @@ export function Hero() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <Button type="submit" disabled={!isValid || isSubmitting} size="md">
+              <Button type="submit" disabled={isSubmitting} size="md">
                 {isSubmitting ? 'Sending…' : 'Get a Quote'}
               </Button>
             </form>
@@ -84,9 +84,7 @@ export function Hero() {
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             className="relative mx-auto aspect-square w-full max-w-md lg:max-w-none"
           >
-            <div className="absolute inset-0 animate-pulse-glow motion-reduce:animate-none">
-              <PipeBubble />
-            </div>
+            <PipeFlow />
           </motion.div>
         </div>
       </Container>

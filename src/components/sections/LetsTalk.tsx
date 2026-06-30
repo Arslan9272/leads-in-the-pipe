@@ -1,9 +1,10 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 import { Container } from '@/components/ui/Container';
 import { SunStar } from '@/components/icons/SunStar';
 import { ArrowUpRight } from '@/components/icons/ArrowUpRight';
-import { CONTACT_EMAIL } from '@/lib/constants';
+import { ROUTES } from '@/lib/constants';
 
 export function LetsTalk() {
   const prefersReduced = useReducedMotion();
@@ -15,8 +16,8 @@ export function LetsTalk() {
       className="relative overflow-hidden py-24 md:py-32 lg:py-40"
     >
       <Container>
-        <a
-          href={`mailto:${CONTACT_EMAIL}`}
+        <Link
+          to={ROUTES.contact}
           aria-labelledby="lets-talk-heading"
           className="group block focus-visible:rounded-3xl"
         >
@@ -34,7 +35,7 @@ export function LetsTalk() {
                 className="mt-4 flex flex-wrap items-baseline gap-x-6 font-display text-6xl font-semibold leading-[0.95] tracking-tightest text-text-primary md:text-8xl lg:text-[140px]"
               >
                 Let&apos;s Talk
-                <ArrowUpRight className="h-12 w-12 text-accent transition-transform group-hover:translate-x-2 group-hover:-translate-y-2 md:h-16 md:w-16" />
+                <ArrowUpRight className="h-12 w-12 text-accent transition-all group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:text-accent md:h-16 md:w-16" />
               </h2>
               <p className="mt-6 text-base text-text-secondary md:text-lg">
                 Feel free to contact us.
@@ -49,7 +50,7 @@ export function LetsTalk() {
               </div>
             </div>
           </motion.div>
-        </a>
+        </Link>
       </Container>
 
       <div

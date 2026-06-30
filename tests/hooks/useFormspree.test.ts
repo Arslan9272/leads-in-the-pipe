@@ -27,7 +27,8 @@ describe('useFormspree', () => {
     expect(result.current.isValid).toBe(true);
   });
 
-  it('transitions to pending-setup when the endpoint env var is missing', async () => {
+  it('transitions to pending-setup when no endpoint env var is set', async () => {
+    vi.stubEnv('VITE_API_BASE_URL', '');
     vi.stubEnv('VITE_FORMSPREE_ENDPOINT', '');
     const { result } = renderHook(() => useFormspree());
     act(() => result.current.setEmail('founder@company.com'));
@@ -38,7 +39,30 @@ describe('useFormspree', () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  it('posts to the endpoint and transitions to success on 200', async () => {
+  it('posts to the backend /api/lead endpoint and transitions to success on 200', async () => {
+    vi.stubEnv('VITE_API_BASE_URL', 'https://api.example.com');
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockResolvedValueOnce(new Response('{}', { status: 200 }));
+
+    const { result } = renderHook(() => useFormspree());
+    act(() => result.current.setEmail('founder@company.com'));
+    await act(async () => {
+      await result.current.submit();
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.example.com/api/lead',
+      expect.objectContaining({
+        method: 'POST',
+        body: expect.stringContaining('founder@company.com'),
+      }),
+    );
+    expect(result.current.status).toBe('success');
+    expect(result.current.email).toBe('');
+  });
+
+  it('falls back to Formspree when only VITE_FORMSPREE_ENDPOINT is set', async () => {
+    vi.stubEnv('VITE_API_BASE_URL', '');
     vi.stubEnv('VITE_FORMSPREE_ENDPOINT', 'https://formspree.io/f/test123');
     const fetchMock = vi.mocked(fetch);
     fetchMock.mockResolvedValueOnce(new Response('{}', { status: 200 }));
@@ -51,16 +75,13 @@ describe('useFormspree', () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       'https://formspree.io/f/test123',
-      expect.objectContaining({
-        method: 'POST',
-        body: expect.stringContaining('founder@company.com'),
-      }),
+      expect.objectContaining({ method: 'POST' }),
     );
     expect(result.current.status).toBe('success');
-    expect(result.current.email).toBe('');
   });
 
   it('sets status to error when the request fails', async () => {
+    vi.stubEnv('VITE_API_BASE_URL', '');
     vi.stubEnv('VITE_FORMSPREE_ENDPOINT', 'https://formspree.io/f/test123');
     const fetchMock = vi.mocked(fetch);
     fetchMock.mockResolvedValueOnce(new Response('nope', { status: 500 }));
