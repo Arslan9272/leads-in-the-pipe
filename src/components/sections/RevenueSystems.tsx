@@ -76,9 +76,11 @@ export function RevenueSystems() {
               className="font-display text-4xl font-medium leading-[1.05] tracking-tight md:text-6xl"
             >
               We don&apos;t run campaigns.{' '}
-              <span className="relative whitespace-nowrap">
-                We build
-                <span className="ml-3 inline-block border-b-4 border-accent">revenue systems.</span>
+              <span className="relative">
+                We build{' '}
+                <span className="inline-block whitespace-nowrap border-b-4 border-accent">
+                  revenue systems.
+                </span>
               </span>
             </motion.h2>
 

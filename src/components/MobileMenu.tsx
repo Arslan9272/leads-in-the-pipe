@@ -9,7 +9,7 @@ import { CloseIcon } from '@/components/icons/Menu';
 import { SocialIcon } from '@/components/icons/SocialIcons';
 import { Logo } from '@/components/icons/Logo';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
-import { CONTACT_EMAIL, ROUTES } from '@/lib/constants';
+import { ROUTES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 interface MobileMenuProps {
@@ -90,12 +90,6 @@ export function MobileMenu({ open, onClose, triggerRef }: MobileMenuProps) {
             >
               {NAV_CTA.label}
             </NavLink>
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="rounded-full border border-border px-6 py-3 text-sm text-text-secondary hover:border-accent-dim hover:text-accent"
-            >
-              {CONTACT_EMAIL}
-            </a>
           </nav>
 
           <div className="flex items-center justify-center gap-5 pb-10">

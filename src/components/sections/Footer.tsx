@@ -7,8 +7,6 @@ import { socialLinks } from '@/data/social';
 import {
   ADDRESS_LINE_1,
   ADDRESS_LINE_2,
-  CONTACT_EMAIL,
-  CONTACT_PHONE,
   ROUTES,
   SITE_NAME,
 } from '@/lib/constants';
@@ -66,23 +64,7 @@ export function Footer() {
           <div>
             <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">Contact</h3>
             <ul className="mt-4 space-y-2 text-sm text-text-secondary">
-              <li>
-                <a
-                  href={`tel:${CONTACT_PHONE.replace(/[^+\d]/g, '')}`}
-                  className="transition-colors hover:text-accent"
-                >
-                  {CONTACT_PHONE}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${CONTACT_EMAIL}`}
-                  className="transition-colors hover:text-accent"
-                >
-                  {CONTACT_EMAIL}
-                </a>
-              </li>
-              <li className="pt-2 text-text-muted">
+              <li className="text-text-muted">
                 {ADDRESS_LINE_1}
                 <br />
                 {ADDRESS_LINE_2}

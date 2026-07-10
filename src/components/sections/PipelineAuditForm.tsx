@@ -36,7 +36,7 @@ export function PipelineAuditForm() {
     } else if (status === 'error') {
       show('error', 'Something went wrong. Please try again.');
     } else if (status === 'pending-setup') {
-      show('info', 'Form setup pending. Reach us at umair@leadsinthepipe.com.');
+      show('info', 'Form setup pending. Please try again shortly.');
     }
   }, [status, show]);
 
