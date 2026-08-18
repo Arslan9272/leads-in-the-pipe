@@ -7,166 +7,172 @@ interface PipeFlowProps {
 }
 
 /**
- * Three intake pipes (your outbound, LinkedIn and messaging channels) that
- * interconnect at a junction and feed one trunk pipe down into the pipeline.
- * Drops of light = leads flowing through the system.
+ * Four intake pipes arranged as a pinwheel, each running tangentially into a
+ * closed ring around the pipeline core. Leads travel down the pipes and settle
+ * as a pool of qualified contacts that simmers and bubbles inside the core.
  */
 
-// Visual tube segments.
-const INTAKE_L = 'M44 26 C44 96 120 92 120 156';
-const INTAKE_M = 'M120 20 L120 156';
-const INTAKE_R = 'M196 26 C196 96 120 92 120 156';
-const TRUNK = 'M120 156 C120 214 120 236 120 300';
+// One pipe: straight tangent run, then a quarter wrap around the core. The
+// other three are this same path rotated 90/180/270, so the four wraps meet
+// end to end and close the ring.
+const PIPE = 'M310.8 -98.1 L127.1 164 A150 150 0 0 0 164 372.9';
+const ROTATIONS = [0, 90, 180, 270];
 
-// Full motion paths the drops travel (intake + trunk), one per channel.
-const FLOW_L = `${INTAKE_L} C120 214 120 236 120 300`;
-const FLOW_M = `${INTAKE_M} C120 214 120 236 120 300`;
-const FLOW_R = `${INTAKE_R} C120 214 120 236 120 300`;
-
-const TUBES = [INTAKE_L, INTAKE_M, INTAKE_R, TRUNK];
-const INTAKE_MOUTHS = [
-  { cx: 44, cy: 26 },
-  { cx: 120, cy: 20 },
-  { cx: 196, cy: 26 },
+const TRAVEL_DUR = 7;
+// Resting points on the pipe for the reduced-motion fallback.
+const STATIC_AT = [
+  { x: 219, y: 33 },
+  { x: 164, y: 112 },
+];
+// Per-pipe drop timings — green = qualified lead, grey = raw contact.
+const DROPS = [
+  { fill: '#9EFB9C', r: 5, offset: 0 },
+  { fill: '#5A5A5A', r: 4.2, offset: 0.9 },
 ];
 
-const DROP_DUR = 4.6;
-const FLOWS = [
-  { id: 'l', path: FLOW_L, drops: [{ begin: '0s', r: 6 }, { begin: '2.3s', r: 4.5 }] },
-  { id: 'm', path: FLOW_M, drops: [{ begin: '0.9s', r: 6.5 }, { begin: '3.2s', r: 5 }] },
-  { id: 'r', path: FLOW_R, drops: [{ begin: '1.7s', r: 6 }, { begin: '3.9s', r: 4.5 }] },
-];
+// Settled pool of leads inside the core — jittered grid, deterministic seed.
+const POOL = (() => {
+  let seed = 1337;
+  const rnd = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+  const pts: { x: number; y: number; r: number; rise: number; dur: number; delay: number }[] = [];
+  for (let row = 0; row < 5; row++) {
+    for (let col = 0; col < 13; col++) {
+      const x = 152 + col * 16 + (row % 2) * 8 + (rnd() - 0.5) * 7;
+      const y = 268 + row * 17 + (rnd() - 0.5) * 7;
+      if (Math.hypot(x - 250, y - 250) > 138) continue;
+      pts.push({
+        x,
+        y,
+        r: 3.4 + rnd() * 1.5,
+        rise: 5 + rnd() * 9,
+        dur: 2.4 + rnd() * 2.6,
+        delay: rnd() * 4,
+      });
+    }
+  }
+  return pts;
+})();
 
-// Resting positions for the reduced-motion fallback.
-const STATIC_DROPS = [
-  { cx: 70, cy: 70 },
-  { cx: 120, cy: 60 },
-  { cx: 170, cy: 70 },
-  { cx: 120, cy: 200 },
-  { cx: 120, cy: 270 },
+// Bubbles breaking off the pool and rising through the core.
+const BUBBLES = [
+  { x: 250, r: 4.6, dur: 6.5, delay: 0 },
+  { x: 206, r: 3.4, dur: 7.4, delay: 2.1 },
+  { x: 292, r: 3.8, dur: 8.1, delay: 4.3 },
+  { x: 232, r: 3, dur: 7, delay: 5.6 },
 ];
-
-function Tube({ d }: { d: string }) {
-  return (
-    <>
-      <path d={d} stroke="url(#pf-glass)" strokeWidth="26" strokeLinecap="round" fill="none" />
-      <path d={d} stroke="#04140A" strokeOpacity="0.35" strokeWidth="16" strokeLinecap="round" fill="none" />
-      <path
-        d={d}
-        stroke="#FFFFFF"
-        strokeOpacity="0.16"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        fill="none"
-        transform="translate(-4 0)"
-      />
-    </>
-  );
-}
+const EASE = { calcMode: 'spline', keyTimes: '0;0.5;1', keySplines: '.4 0 .6 1;.4 0 .6 1' } as const;
 
 export function PipeFlow({ className }: PipeFlowProps) {
   const prefersReduced = useReducedMotion();
 
   return (
     <svg
-      viewBox="0 0 240 320"
+      viewBox="0 0 500 500"
       role="img"
-      aria-label="Three interconnected pipes carrying glowing leads into your pipeline"
+      aria-label="Four pipes feeding leads into a pipeline core where qualified contacts collect"
       className={cn('h-full w-full', className)}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <radialGradient id="pf-ambient" cx="50%" cy="45%" r="58%">
-          <stop offset="0%" stopColor="#9EFB9C" stopOpacity="0.26" />
-          <stop offset="55%" stopColor="#9EFB9C" stopOpacity="0.06" />
+        <path id="pf-pipe" d={PIPE} />
+        <radialGradient id="pf-halo" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#9EFB9C" stopOpacity="0.05" />
           <stop offset="100%" stopColor="#9EFB9C" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id="pf-glass" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#9EFB9C" stopOpacity="0.06" />
-          <stop offset="50%" stopColor="#9EFB9C" stopOpacity="0.20" />
-          <stop offset="100%" stopColor="#9EFB9C" stopOpacity="0.06" />
-        </linearGradient>
-        <radialGradient id="pf-drop" cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stopColor="#F4FFF2" />
-          <stop offset="45%" stopColor="#C7FFC5" />
-          <stop offset="100%" stopColor="#9EFB9C" />
+        <radialGradient id="pf-disc" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.05" />
+          <stop offset="86%" stopColor="#FFFFFF" stopOpacity="0.035" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
         </radialGradient>
-        <filter id="pf-glow" x="-120%" y="-120%" width="340%" height="340%">
-          <feGaussianBlur stdDeviation="3.4" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
+        <radialGradient id="pf-core" cx="50%" cy="32%" r="46%">
+          <stop offset="0%" stopColor="#9EFB9C" stopOpacity="0.10" />
+          <stop offset="100%" stopColor="#9EFB9C" stopOpacity="0" />
+        </radialGradient>
       </defs>
 
-      {/* Ambient halo */}
-      <rect x="0" y="0" width="240" height="320" fill="url(#pf-ambient)" />
+      {/* Core */}
+      <circle cx="250" cy="250" r="215" fill="url(#pf-halo)" />
+      <circle cx="250" cy="250" r="155" fill="url(#pf-disc)" />
+      <circle cx="250" cy="250" r="155" fill="url(#pf-core)" />
 
-      {/* Tubes */}
-      {TUBES.map((d) => (
-        <Tube key={d} d={d} />
+      {/* Pipes + the leads travelling down them */}
+      {ROTATIONS.map((angle, pipe) => (
+        <g key={angle} transform={`rotate(${angle} 250 250)`}>
+          <use href="#pf-pipe" stroke="#2A2A2A" strokeWidth="13" strokeLinecap="round" />
+          {DROPS.map((drop, i) => {
+            const begin = `${pipe * 1.4 + drop.offset}s`;
+            return prefersReduced ? (
+              <circle key={i} cx={STATIC_AT[i].x} cy={STATIC_AT[i].y} r={drop.r} fill={drop.fill} />
+            ) : (
+              <circle key={i} r={drop.r} fill={drop.fill} opacity="0">
+                <animateMotion dur={`${TRAVEL_DUR}s`} begin={begin} repeatCount="indefinite">
+                  <mpath href="#pf-pipe" />
+                </animateMotion>
+                <animate
+                  attributeName="opacity"
+                  dur={`${TRAVEL_DUR}s`}
+                  begin={begin}
+                  repeatCount="indefinite"
+                  values="0;1;1;0"
+                  keyTimes="0;0.06;0.82;1"
+                />
+              </circle>
+            );
+          })}
+        </g>
       ))}
 
-      {/* Junction where the channels interconnect */}
-      <circle cx="120" cy="156" r="14" fill="#04140A" />
-      <circle cx="120" cy="156" r="14" fill="url(#pf-ambient)" />
-      <circle cx="120" cy="156" r="6" fill="#9EFB9C" fillOpacity="0.7" filter="url(#pf-glow)" />
-
-      {/* Intake mouths */}
-      {INTAKE_MOUTHS.map((m) => (
-        <ellipse
-          key={`${m.cx}-${m.cy}`}
-          cx={m.cx}
-          cy={m.cy}
-          rx="14"
-          ry="5"
-          fill="#9EFB9C"
-          fillOpacity="0.16"
-          stroke="#9EFB9C"
-          strokeOpacity="0.45"
-          strokeWidth="1.6"
-        />
-      ))}
-
-      {/* Pipeline collection glow (outlet) */}
-      <ellipse cx="120" cy="304" rx="34" ry="10" fill="url(#pf-ambient)" />
-      <ellipse cx="120" cy="300" rx="18" ry="5" fill="#9EFB9C" fillOpacity="0.28" />
-
-      {/* Hidden reference paths for animateMotion */}
-      {!prefersReduced && (
-        <>
-          <path id="pf-mpath-l" d={FLOW_L} fill="none" stroke="none" />
-          <path id="pf-mpath-m" d={FLOW_M} fill="none" stroke="none" />
-          <path id="pf-mpath-r" d={FLOW_R} fill="none" stroke="none" />
-        </>
+      {/* Bubbles rising off the pool */}
+      {prefersReduced ? (
+        <circle cx="250" cy="215" r="4.6" fill="#9EFB9C" opacity="0.8" />
+      ) : (
+        BUBBLES.map((b) => (
+          <circle key={b.x} cx={b.x} cy="330" r={b.r} fill="#9EFB9C" opacity="0">
+            <animate
+              attributeName="cy"
+              dur={`${b.dur}s`}
+              begin={`${b.delay}s`}
+              repeatCount="indefinite"
+              values="330;160"
+            />
+            <animate
+              attributeName="opacity"
+              dur={`${b.dur}s`}
+              begin={`${b.delay}s`}
+              repeatCount="indefinite"
+              values="0;0.9;0"
+              keyTimes="0;0.25;1"
+            />
+          </circle>
+        ))
       )}
 
-      {/* Travelling drops of light */}
-      {prefersReduced
-        ? STATIC_DROPS.map((p, i) => (
-            <circle key={i} cx={p.cx} cy={p.cy} r="5.5" fill="url(#pf-drop)" filter="url(#pf-glow)" />
-          ))
-        : FLOWS.map((flow) =>
-            flow.drops.map((d, i) => (
-              <g key={`${flow.id}-${i}`} filter="url(#pf-glow)">
-                <circle r={d.r} fill="url(#pf-drop)">
-                  <animateMotion dur={`${DROP_DUR}s`} begin={d.begin} repeatCount="indefinite">
-                    <mpath href={`#pf-mpath-${flow.id}`} />
-                  </animateMotion>
-                  <animate
-                    attributeName="opacity"
-                    dur={`${DROP_DUR}s`}
-                    begin={d.begin}
-                    repeatCount="indefinite"
-                    values="0;1;1;1;0"
-                    keyTimes="0;0.08;0.5;0.9;1"
-                  />
-                </circle>
-              </g>
-            )),
+      {/* Pool of collected leads, simmering */}
+      {POOL.map((p, i) => (
+        <circle key={i} cx={p.x} cy={p.y} r={p.r} fill="#9EFB9C">
+          {!prefersReduced && (
+            <>
+              <animate
+                attributeName="cy"
+                dur={`${p.dur}s`}
+                begin={`${p.delay}s`}
+                repeatCount="indefinite"
+                values={`${p.y};${p.y - p.rise};${p.y}`}
+                {...EASE}
+              />
+              <animate
+                attributeName="opacity"
+                dur={`${p.dur}s`}
+                begin={`${p.delay}s`}
+                repeatCount="indefinite"
+                values="0.55;1;0.55"
+                {...EASE}
+              />
+            </>
           )}
+        </circle>
+      ))}
     </svg>
   );
 }
